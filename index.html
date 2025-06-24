@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Damage Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 10px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c5aa0, #4a90e2);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        .lead-info {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .section h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            background: #fafafa;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            background: #fff;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        .measurement-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .photo-upload {
+            border: 2px dashed #4a90e2;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            background: #f8f9fa;
+            margin-top: 10px;
+        }
+        
+        .photo-upload input {
+            margin-top: 10px;
+        }
+        
+        .moisture-reading {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .add-reading {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .urgent {
+            background: #dc3545;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #4a90e2;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 480px) {
+            .measurement-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .moisture-reading {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Water Damage Assessment</h1>
+            <p>Bob Underwood Property - Rental Unit</p>
+        </div>
+        
+        <div class="lead-info">
+            <strong>Property:</strong> 2071 Refuge Cir, Gulf Breeze, FL 32563<br>
+            <strong>Owner:</strong> Bob Underwood (5093922070)<br>
+            <strong>Tenant:</strong> Nadja (704-726-9614)<br>
+            <strong>Date:</strong> <span id="currentDate"></span>
+        </div>
+        
+        <form id="assessmentForm">
+            <!-- Basic Info -->
+            <div class="section">
+                <h3>📋 Assessment Details</h3>
+                <div class="form-group">
+                    <label>Technician Name</label>
+                    <input type="text" name="techName" required>
+                </div>
+                <div class="form-group">
+                    <label>Time Arrived</label>
+                    <input type="time" name="timeArrived" required>
+                </div>
+                <div class="form-group">
+                    <label>Weather Conditions</label>
+                    <select name="weather">
+                        <option value="">Select...</option>
+                        <option value="clear">Clear/Sunny</option>
+                        <option value="cloudy">Cloudy</option>
+                        <option value="rainy">Rainy</option>
+                        <option value="stormy">Stormy</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Source of Loss -->
+            <div class="section">
+                <h3>🔍 Source of Loss Identification</h3>
+                <div class="info-box">
+                    <strong>Check in this order:</strong> Roof → Plumbing → HVAC → Other
+                </div>
+                
+                <div class="form-group">
+                    <label>Primary Source Identified</label>
+                    <select name="primarySource" required>
+                        <option value="">Select Primary Source...</option>
+                        <option value="roof-shingles">Roof - Missing/Damaged Shingles</option>
+                        <option value="roof-flashing">Roof - Flashing Issues</option>
+                        <option value="roof-gutters">Roof - Gutter Problems</option>
+                        <option value="roof-penetration">Roof - Penetration Leaks</option>
+                        <option value="plumbing-supply">Plumbing - Supply Line Leak</option>
+                        <option value="plumbing-joint">Plumbing - Joint/Fitting Leak</option>
+                        <option value="plumbing-condensation">Plumbing - Pipe Condensation</option>
+                        <option value="hvac-drain">HVAC - Clogged Drain Line</option>
+                        <option value="hvac-pan">HVAC - Cracked Drain Pan</option>
+                        <option value="hvac-condensation">HVAC - Ductwork Condensation</option>
+                        <option value="other">Other (specify below)</option>
+                        <option value="unknown">Could Not Determine</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Detailed Description of Source</label>
+                    <textarea name="sourceDescription" rows="3" placeholder="Describe exactly what you found..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Is leak currently active?</label>
+                    <select name="activeleak" required>
+                        <option value="">Select...</option>
+                        <option value="yes">Yes - Still Leaking</option>
+                        <option value="no">No - Appears Stopped</option>
+                        <option value="intermittent">Intermittent</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Damage Assessment -->
+            <div class="section">
+                <h3>📏 Damage Measurements</h3>
+                <div class="measurement-grid">
+                    <div class="form-group">
+                        <label>Affected Area Length (ft)</label>
+                        <input type="number" name="areaLength" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Affected Area Width (ft)</label>
+                        <input type="number" name="areaWidth" step="0.1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ceiling Height (ft)</label>
+                    <input type="number" name="ceilingHeight" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Standing Water Depth (inches)</label>
+                    <input type="number" name="waterDepth" step="0.1" placeholder="0 if none">
+                </div>
+            </div>
+
+            <!-- Materials Affected -->
+            <div class="section">
+                <h3>🏗️ Affected Materials</h3>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="materials" value="drywall" id="drywall">
+                        <label for="drywall">Drywall - Soft/Crumbling/Discolored</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="materials" value="insulation" id="insulation">
+                        <label for="insulation">Insulation - Wet/Compressed</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="materials" value="flooring" id="flooring">
+                        <label for="flooring">Flooring - Buckling/Staining</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="materials" value="wood" id="wood">
+                        <label for="wood">Wood - Warped/Soft/Rot</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="materials" value="paint" id="paint">
+                        <label for="paint">Paint - Peeling/Bubbling</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="materials" value="electrical" id="electrical">
+                        <label for="electrical">⚠️ Electrical Components Affected</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Moisture Readings -->
+            <div class="section">
+                <h3>💧 Moisture Readings</h3>
+                <div class="info-box">
+                    <strong>Reference:</strong> Dry (0-15%) | Elevated (16-19%) | Wet (20%+)
+                </div>
+                <div id="moistureReadings">
+                    <div class="moisture-reading">
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" name="moistureLocation[]" placeholder="e.g., Ceiling center">
+                        </div>
+                        <div class="form-group">
+                            <label>Reading %</label>
+                            <input type="number" name="moistureReading[]" step="0.1" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Material</label>
+                            <select name="moistureMaterial[]">
+                                <option value="drywall">Drywall</option>
+                                <option value="wood">Wood</option>
+                                <option value="concrete">Concrete</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="add-reading" onclick="addMoistureReading()">+ Add Reading</button>
+            </div>
+
+            <!-- Safety Concerns -->
+            <div class="section">
+                <h3>⚠️ Safety Assessment</h3>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="safety" value="electrical" id="safety-electrical">
+                        <label for="safety-electrical">🚨 Water near electrical components</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="safety" value="structural" id="safety-structural">
+                        <label for="safety-structural">🚨 Structural damage/sagging</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="safety" value="mold" id="safety-mold">
+                        <label for="safety-mold">🦠 Visible mold or strong odors</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="safety" value="access" id="safety-access">
+                        <label for="safety-access">⚠️ Unsafe access conditions</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Safety Notes</label>
+                    <textarea name="safetyNotes" rows="2" placeholder="Describe any safety concerns..."></textarea>
+                </div>
+            </div>
+
+            <!-- Photo Documentation -->
+            <div class="section">
+                <h3>📸 Photo Documentation</h3>
+                <div class="info-box">
+                    <strong>Required Photos:</strong> Source of leak, affected areas, moisture meter readings, overview shots
+                </div>
+                <div class="photo-upload">
+                    <p>📱 Take photos with your phone and note them here:</p>
+                    <textarea name="photoList" rows="4" placeholder="List photos taken:
+1. Overview of affected area
+2. Close-up of leak source
+3. Moisture meter reading at ceiling
+4. Damaged drywall section
+etc..."></textarea>
+                </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div class="section">
+                <h3>📝 Additional Notes</h3>
+                <div class="form-group">
+                    <label>Timeline (When did damage occur?)</label>
+                    <textarea name="timeline" rows="2" placeholder="When was leak discovered? Any relevant timeline info..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Recommendations</label>
+                    <textarea name="recommendations" rows="3" placeholder="Immediate actions needed, urgency level, etc..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Next Steps Discussed with Customer</label>
+                    <textarea name="nextSteps" rows="2" placeholder="What did you tell Bob/Nadja about next steps?"></textarea>
+                </div>
+            </div>
+
+            <div class="urgent">
+                🚨 REMEMBER: Send this data to Jeannie (Ops Manager) immediately for estimate preparation
+            </div>
+
+            <button type="submit" class="submit-btn">📧 Email Assessment to Jeannie</button>
+        </form>
+        
+        <div class="timestamp">
+            Form completed: <span id="timestamp"></span>
+        </div>
+    </div>
+
+    <script>
+        // Set current date and time
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+        
+        // Add moisture reading functionality
+        function addMoistureReading() {
+            const container = document.getElementById('moistureReadings');
+            const newReading = document.createElement('div');
+            newReading.className = 'moisture-reading';
+            newReading.innerHTML = `
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" name="moistureLocation[]" placeholder="e.g., Wall 2ft from source">
+                </div>
+                <div class="form-group">
+                    <label>Reading %</label>
+                    <input type="number" name="moistureReading[]" step="0.1" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label>Material</label>
+                    <select name="moistureMaterial[]">
+                        <option value="drywall">Drywall</option>
+                        <option value="wood">Wood</option>
+                        <option value="concrete">Concrete</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            `;
+            container.appendChild(newReading);
+        }
+
+        // Form submission
+        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Update timestamp
+            document.getElementById('timestamp').textContent = new Date().toLocaleString();
+            
+            // Collect all form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Handle regular fields
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            // Format the email body
+            let emailBody = `WATER DAMAGE ASSESSMENT REPORT%0D%0A`;
+            emailBody += `========================================%0D%0A%0D%0A`;
+            emailBody += `PROPERTY: 2071 Refuge Cir, Gulf Breeze, FL 32563%0D%0A`;
+            emailBody += `OWNER: Bob Underwood (5093922070)%0D%0A`;
+            emailBody += `TENANT: Nadja (704-726-9614)%0D%0A`;
+            emailBody += `TECHNICIAN: ${data.techName || 'Not specified'}%0D%0A`;
+            emailBody += `DATE: ${new Date().toLocaleDateString()}%0D%0A`;
+            emailBody += `TIME ARRIVED: ${data.timeArrived || 'Not specified'}%0D%0A`;
+            emailBody += `WEATHER: ${data.weather || 'Not specified'}%0D%0A%0D%0A`;
+            
+            emailBody += `SOURCE OF LOSS:%0D%0A`;
+            emailBody += `Primary Source: ${data.primarySource || 'Not identified'}%0D%0A`;
+            emailBody += `Description: ${data.sourceDescription || 'None provided'}%0D%0A`;
+            emailBody += `Currently Active: ${data.activeleak || 'Unknown'}%0D%0A%0D%0A`;
+            
+            emailBody += `DAMAGE MEASUREMENTS:%0D%0A`;
+            emailBody += `Affected Area: ${data.areaLength || 'N/A'} x ${data.areaWidth || 'N/A'} ft%0D%0A`;
+            emailBody += `Ceiling Height: ${data.ceilingHeight || 'N/A'} ft%0D%0A`;
+            emailBody += `Water Depth: ${data.waterDepth || '0'} inches%0D%0A%0D%0A`;
+            
+            // Add materials affected
+            const materials = document.querySelectorAll('input[name="materials"]:checked');
+            if (materials.length > 0) {
+                emailBody += `AFFECTED MATERIALS:%0D%0A`;
+                materials.forEach(material => {
+                    emailBody += `- ${material.nextElementSibling.textContent}%0D%0A`;
+                });
+                emailBody += `%0D%0A`;
+            }
+            
+            // Add safety concerns
+            const safety = document.querySelectorAll('input[name="safety"]:checked');
+            if (safety.length > 0) {
+                emailBody += `SAFETY CONCERNS:%0D%0A`;
+                safety.forEach(concern => {
+                    emailBody += `- ${concern.nextElementSibling.textContent}%0D%0A`;
+                });
+                emailBody += `Safety Notes: ${data.safetyNotes || 'None'}%0D%0A%0D%0A`;
+            }
+            
+            emailBody += `MOISTURE READINGS:%0D%0A`;
+            const locations = document.querySelectorAll('input[name="moistureLocation[]"]');
+            const readings = document.querySelectorAll('input[name="moistureReading[]"]');
+            const materialTypes = document.querySelectorAll('select[name="moistureMaterial[]"]');
+            
+            for (let i = 0; i < locations.length; i++) {
+                if (locations[i].value) {
+                    emailBody += `- ${locations[i].value}: ${readings[i].value || 'N/A'}% (${materialTypes[i].value})%0D%0A`;
+                }
+            }
+            emailBody += `%0D%0A`;
+            
+            emailBody += `ADDITIONAL NOTES:%0D%0A`;
+            emailBody += `Timeline: ${data.timeline || 'Not specified'}%0D%0A`;
+            emailBody += `Recommendations: ${data.recommendations || 'None'}%0D%0A`;
+            emailBody += `Next Steps: ${data.nextSteps || 'None'}%0D%0A%0D%0A`;
+            
+            emailBody += `PHOTOS TAKEN:%0D%0A`;
+            emailBody += `${data.photoList || 'None listed'}%0D%0A%0D%0A`;
+            
+            emailBody += `URGENT: Bob wants quick estimate - he's ready to start today but needs cost visibility first!`;
+            
+            // Create mailto link
+            const subject = `URGENT: Water Damage Assessment - Bob Underwood Property`;
+            const mailtoLink = `mailto:jeannie@borestorationofbaldwincounty.com?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
+            
+            // Open email client
+            window.location.href = mailtoLink;
+            
+            // Show confirmation
+            alert('Opening email to send to Jeannie...\\n\\nNext steps:\\n1. Send the email that just opened\\n2. Call Bob: "Found [source]. Jeannie preparing estimate now."\\n3. Emphasize urgency to Jeannie if leak is active');
+        });
+    </script>
+</body>
+</html>
